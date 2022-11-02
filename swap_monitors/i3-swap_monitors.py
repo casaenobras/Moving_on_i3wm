@@ -1,12 +1,16 @@
 #!/usr/bin/python
 #coding: utf-8
 
-import i3ipc, sys, getopt
+import i3ipc
+import sys
+import getopt
 
 from gi.repository import Gdk
 from operator import itemgetter
 
 # Return a dictionary with the output and its workspaces
+
+
 def active_workspaces(workspaces):
     active_workspaces = {}
     allmonitors = []
@@ -19,22 +23,24 @@ def active_workspaces(workspaces):
         allmonitors.append([
             monitor.get_model()] + [n * scale for n in [geo.x, geo.y, geo.width, geo.height]])
 
-    order_monitors = sorted(allmonitors, key=itemgetter(1,2))
+    order_monitors = sorted(allmonitors, key=itemgetter(1, 2))
 
     for monitor in order_monitors:
-            list = []
-            for w in workspaces:
-                if w.output == monitor[0]:
-                    if w.num in list:
-                        pass
-                    else:
-                        list.append(w)
-                    
-            active_workspaces[monitor[0]] = list
-    
+        list = []
+        for w in workspaces:
+            if w.output == monitor[0]:
+                if w.num in list:
+                    pass
+                else:
+                    list.append(w)
+
+        active_workspaces[monitor[0]] = list
+
     return active_workspaces
 
 # Swap workspaces between outputs
+
+
 def swap_outputs(i3, outputs, workspaces, reverse=False, focus=False):
 
     active = active_workspaces(workspaces)
@@ -46,7 +52,7 @@ def swap_outputs(i3, outputs, workspaces, reverse=False, focus=False):
 
         for i in reversed(keys_list):
             reverse_keys_list.append(i)
-        
+
         keys_list = reverse_keys_list
 
 # Swap outputs
@@ -71,8 +77,6 @@ def swap_outputs(i3, outputs, workspaces, reverse=False, focus=False):
             if o.primary and w.visible and focus == False:
                 i3.command("workspace number " + str(w.num))
                 sys.exit()
-
-
 
 
 def main(argv):
