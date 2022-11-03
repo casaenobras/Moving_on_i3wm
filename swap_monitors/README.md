@@ -45,8 +45,8 @@ You can change this behavior with the parameter **-f**, the focus will be in the
 Clone this repository, go into the directory and give execute permissions to the file **i3-swap_monitors.py**.
 
 ~~~
-git clone https://github.com/casaenobras/i3-swap_monitors
-cd i3-swap_monitors
+git clone https://github.com/casaenobras/Moving_on_i3wm
+cd Moving_on_i3wm/swap_monitors
 chmod +x i3-swap_monitors.py
 ~~~
 
