@@ -4,7 +4,9 @@
 import i3ipc
 import sys
 import getopt
+import gi
 
+gi.require_version('Gdk', '3.0')
 from gi.repository import Gdk
 from operator import itemgetter
 
