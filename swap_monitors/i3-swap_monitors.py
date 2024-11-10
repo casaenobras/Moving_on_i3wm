@@ -1,10 +1,12 @@
 #!/usr/bin/python
-#coding: utf-8
+# coding: utf-8
 
 import i3ipc
 import sys
 import getopt
+import gi
 
+gi.require_version("Gdk", "3.0")
 from gi.repository import Gdk
 from operator import itemgetter
 
@@ -20,8 +22,10 @@ def active_workspaces(workspaces):
         monitor = gdkdsp.get_monitor(i)
         scale = monitor.get_scale_factor()
         geo = monitor.get_geometry()
-        allmonitors.append([
-            monitor.get_model()] + [n * scale for n in [geo.x, geo.y, geo.width, geo.height]])
+        allmonitors.append(
+            [monitor.get_model()]
+            + [n * scale for n in [geo.x, geo.y, geo.width, geo.height]]
+        )
 
     order_monitors = sorted(allmonitors, key=itemgetter(1, 2))
 
@@ -38,15 +42,15 @@ def active_workspaces(workspaces):
 
     return active_workspaces
 
+
 # Swap workspaces between outputs
 
 
 def swap_outputs(i3, outputs, workspaces, reverse=False, focus=False):
-
     active = active_workspaces(workspaces)
     keys_list = list(active.keys())
 
-# Selecting the direction of rotation
+    # Selecting the direction of rotation
     if reverse:
         reverse_keys_list = []
 
@@ -55,15 +59,14 @@ def swap_outputs(i3, outputs, workspaces, reverse=False, focus=False):
 
         keys_list = reverse_keys_list
 
-# Swap outputs
+    # Swap outputs
     for r in range(len(keys_list)):
         for w in active[keys_list[r]]:
             i3.command("workspace number " + str(w.num))
             if r < len(keys_list) - 1:
-                i3.command("move workspace to output " + keys_list[r+1])
+                i3.command("move workspace to output " + keys_list[r + 1])
             else:
                 i3.command("move workspace to output " + keys_list[0])
-            print("number " + str(w.num))
 
     for w in workspaces:
         if w.visible:
@@ -80,7 +83,6 @@ def swap_outputs(i3, outputs, workspaces, reverse=False, focus=False):
 
 
 def main(argv):
-
     i3 = i3ipc.Connection()
     workspaces = i3.get_workspaces()
     outputs = i3.get_outputs()
@@ -104,6 +106,5 @@ def main(argv):
             swap_outputs(i3, outputs, workspaces, focus=True)
 
 
-if __name__ == '__main__':
-
+if __name__ == "__main__":
     main(sys.argv[1:])
